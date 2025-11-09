@@ -1,0 +1,80 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Função auxiliar para verificar se é admin
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+    
+    // Função auxiliar para verificar se é agente autenticado
+    function isAgent() {
+      return request.auth != null && request.auth.token.agent == true;
+    }
+    
+    // Função auxiliar para verificar se é usuário autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Coleção de agentes - somente admin pode escrever
+    match /agents/{agentId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+      allow create: if isAgent() || isAdmin();
+      allow update: if isAgent() && request.auth.uid == resource.data.ownerId || isAdmin();
+    }
+    
+    // Coleção de tasks - agentes e admins podem gerenciar
+    match /tasks/{taskId} {
+      allow read: if isAuthenticated();
+      allow create: if isAgent() || isAdmin();
+      allow update: if isAgent() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Coleção de telemetria - somente leitura para autenticados
+    match /telemetry/{date}/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAgent() || isAdmin();
+    }
+    
+    // Coleção de aprendizado - sistema de machine learning
+    match /aprendizado/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAgent() || isAdmin();
+    }
+    
+    // Coleção de comandos - histórico de interações
+    match /comandos/{id} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Coleção de logs - auditoria
+    match /logs/{id} {
+      allow read: if isAdmin();
+      allow write: if isAgent() || isAdmin();
+    }
+    
+    // Coleção de descobertas - IAs e serviços descobertos
+    match /discoveries/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAgent() || isAdmin();
+    }
+    
+    // Task queue - fila de processamento
+    match /taskQueue/{id} {
+      allow read: if isAgent() || isAdmin();
+      allow write: if isAgent() || isAdmin();
+    }
+    
+    // Métricas de evolução
+    match /metricas/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAgent() || isAdmin();
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "name": "predacos-core",
+  "version": "0.1.0-alpha",
+  "description": "Ecossistema Digital Vivo - Sistema Auto-Evolutivo com IA",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node cerebro/jarvis-nucleo.js",
+    "dev": "nodemon cerebro/jarvis-nucleo.js",
+    "test": "jest",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:security": "npm audit && snyk test",
+    "deploy": "firebase deploy",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "agents:start": "node services/agents/start-all.js",
+    "laboratorio": "node laboratorio/explorador-tecnologias.js",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "ai",
+    "automation",
+    "self-evolving",
+    "ecosystem",
+    "jarvis",
+    "predacos"
+  ],
+  "author": "EcoDigiAI <ecodigiai@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@notionhq/client": "^2.2.14",
+    "@octokit/rest": "^20.0.2",
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^5.0.0",
+    "helmet": "^7.1.0",
+    "node-cron": "^3.0.3",
+    "openai": "^4.20.0",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2",
+    "prettier": "^3.1.1",
+    "snyk": "^1.1266.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ecodigiai/predacos-core.git"
+  }
+}
